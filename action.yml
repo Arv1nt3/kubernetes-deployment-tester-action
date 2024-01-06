@@ -1,5 +1,9 @@
 name: "Kubernetes Deployment Tester"
 description: "Deploy an application to Kind and make a simple HTTP test to test the deployment."
+author: "Alexandru Arvinte"
+branding:
+  icon: "box"
+  color: "green"
 inputs:
   image-name:
     description: "Full image name (repo/image_name:tag)"
