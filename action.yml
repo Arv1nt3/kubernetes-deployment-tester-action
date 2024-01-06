@@ -131,7 +131,7 @@ runs:
         kubectl apply -f sa.yaml
         kubectl apply -f crb.yaml
         kubectl apply -f deployment.yaml
-        echo "Sleeping for ${{ inputs.initialDelaySeconds }}s to allow the pod to fully start."
+        echo "Sleeping for ${{ inputs.timeoutSeconds }}s to allow the pod to fully start."
         sleep ${{ inputs.timeoutSeconds }}
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
