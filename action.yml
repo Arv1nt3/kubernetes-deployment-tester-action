@@ -84,7 +84,7 @@ runs:
           command_line="command: [${{ inputs.command }}]"
         fi
         if [ -n "${{ inputs.args }}" ]; then
-          args_line="args: ${inputs.args}"
+          args_line="args: ${{ inputs.args }}"
         fi
         echo "
         apiVersion: apps/v1
