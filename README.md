@@ -40,7 +40,7 @@ jobs:
     # ... steps to build and push your Docker image ...
 
     - name: Deploy and Test on Kind Cluster
-      uses: Arv1nt3/kubernetes-deployment-tester-action@v1.1.0
+      uses: Arv1nt3/kubernetes-deployment-tester-action@v1.1.1
       with:
         image-name: 'repository/your-username/your-application:tag'
         app-port: '80'
