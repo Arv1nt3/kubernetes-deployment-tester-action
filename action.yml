@@ -9,7 +9,7 @@ inputs:
     description: "Full image name (repo/image_name:tag)"
     required: true
   port:
-    description: "Application port"
+    description: "The port of the application"
     required: true
   github-token:
     description: "GitHub token, you can use the default token: secrets.GITHUB_TOKEN"
@@ -18,6 +18,10 @@ inputs:
     description: "Time to out until testing the pod"
     required: false
     default: "20s"
+  path:
+    description: "Path for the livenessProbe and readinessProbe and for the HTTP test"
+    required: false
+    default: "/"
 
 runs:
   using: "composite"
@@ -73,13 +77,13 @@ runs:
                 - containerPort: ${{ inputs.port }}
                 readinessProbe:
                   httpGet:
-                    path: /
+                    path: ${{ inputs.path }}
                     port: ${{ inputs.port }}
                   initialDelaySeconds: 5
                   periodSeconds: 10
                 livenessProbe:
                   httpGet:
-                    path: /
+                    path: ${{ inputs.path }}
                     port: ${{ inputs.port }}
                   initialDelaySeconds: 15
                   periodSeconds: 20
@@ -116,5 +120,5 @@ runs:
       shell: bash
 
     - run: |
-        curl -i http://localhost:8000/
+        curl -i http://localhost:8000${{ inputs.path }}
       shell: bash

@@ -20,9 +20,10 @@ Create a workflow YAML file in your `.github/workflows` directory. An [example w
 | Input         | Description                                         | Required | Default |
 |---------------|-----------------------------------------------------|----------|---------|
 | `image-name`  | Full image name (repository/image_name:tag).              | Yes      | N/A     |
-| `port`    | Application port.                                   | Yes      | N/A     |
+| `port`    | The port of the application.                                   | Yes      | N/A     |
 | `github-token`| GitHub token, you can use the default token: `secrets.GITHUB_TOKEN`. | Yes | N/A |
 | `timeout`     | Time to wait until testing the pod.                 | No       | `20s`   |
+| `path`     | Path for the livenessProbe and readinessProbe and for the HTTP test.                 | No       | `/`   |
 
 ### Example Workflow
 ```yaml
