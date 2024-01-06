@@ -1,19 +1,19 @@
-name: 'Kubernetes Deployment Tester'
-description: 'Deploy an application to Kind and make a simple HTTP test to test the deployment.'
+name: "Kubernetes Deployment Tester"
+description: "Deploy an application to Kind and make a simple HTTP test to test the deployment."
 inputs:
   image-name:
-    description: 'Full image name (repo/image_name:tag)'
+    description: "Full image name (repo/image_name:tag)"
     required: true
   app-port:
-    description: 'Application port'
+    description: "Application port"
     required: true
   github-token:
-    description: 'GitHub token, you can use the default token: secrets.GITHUB_TOKEN'
+    description: "GitHub token, you can use the default token: secrets.GITHUB_TOKEN"
     required: true
   timeout:
-    description: 'Time to out until testing the pod'
+    description: "Time to out until testing the pod"
     required: false
-    default: '20s'
+    default: "20s"
 
 runs:
   using: "composite"

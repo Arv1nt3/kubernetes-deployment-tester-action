@@ -14,10 +14,14 @@ jobs:
         with:
           config_file: .yamllint.yml
   tester:
+    needs: linter
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Test Action with Sample Nginx Application
-        uses: ./
+        uses: ./action.yml
         with:
           image-name: "nginx:latest"
           app-port: "80"
