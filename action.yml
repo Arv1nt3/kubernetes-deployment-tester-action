@@ -54,9 +54,8 @@ runs:
         " > deployment.yaml
       shell: bash
 
-    - run: |
-        helm install kind-action helm/kind-action@v1.2.0
-      shell: bash
+    - name: Setup Kind
+      uses: helm/kind-action@v1.2.0
 
     - run: |
         kubectl cluster-info
