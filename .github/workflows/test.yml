@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v2
 
       - name: Lint YAML files
         uses: ibiqlik/action-yamllint@v3.1.1
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v2
 
       - name: Test Action with Sample Nginx Application
         uses: Arv1nt3/kubernetes-deployment-tester-action@main
