@@ -8,15 +8,16 @@ inputs:
     description: 'Application port'
     required: true
   github-token:
-    description: 'Github token, you can use the default token: secrets.GITHUB_TOKEN'
+    description: 'GitHub token, you can use the default token: secrets.GITHUB_TOKEN'
     required: true
 
 runs:
   using: "composite"
   steps:
     - run: |
-        sed -i 's|IMAGE_PLACEHOLDER|${{ inputs.image-name }}|g' deployment-template.yaml
-        sed -i 's|CONTAINER_PORT|${{ inputs.app-port }}|g' deployment-template.yaml
+        cp deployment-template.yaml deployment.yaml
+        sed -i 's|IMAGE_PLACEHOLDER|${{ inputs.image-name }}|g' deployment.yaml
+        sed -i 's|CONTAINER_PORT|${{ inputs.app-port }}|g' deployment.yaml
       shell: bash
 
     - run: |
@@ -29,10 +30,6 @@ runs:
       shell: bash
 
     - run: |
-        sed -i 's/IMAGE_TAG_PLACEHOLDER/${{ inputs.image-name }}/g' ${{ inputs.deployment-path }}
-      shell: bash
-
-    - run: |
         kubectl create secret docker-registry ghcr-secret \
           --docker-server=ghcr.io \
           --docker-username=${{ github.actor }} \
@@ -40,7 +37,7 @@ runs:
       shell: bash
 
     - run: |
-        kubectl apply -f ${{ inputs.deployment-path }}
+        kubectl apply -f deployment.yaml
         sleep 20
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
