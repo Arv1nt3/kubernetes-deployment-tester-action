@@ -16,6 +16,32 @@ runs:
   steps:
     - run: |
         echo "
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: test
+        " > sa.yaml
+      shell: bash
+
+    - run: |
+        echo "
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: test
+        subjects:
+        - kind: ServiceAccount
+          name: test
+          namespace: default
+        roleRef:
+          kind: ClusterRole
+          name: cluster-admin
+          apiGroup: rbac.authorization.k8s.io
+        " > crb.yaml
+      shell: bash
+
+    - run: |
+        echo "
         apiVersion: apps/v1
         kind: Deployment
         metadata:
@@ -70,6 +96,8 @@ runs:
       shell: bash
 
     - run: |
+        kubectl apply -f sa.yaml
+        kubectl apply -f crb.yaml
         kubectl apply -f deployment.yaml
         sleep 20
         kubectl get po
