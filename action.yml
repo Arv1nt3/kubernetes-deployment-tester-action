@@ -1,5 +1,5 @@
-name: 'Deploy and Test on Kind'
-description: 'Deploy an application to Kind and run tests'
+name: 'Kubernetes Deployment Tester'
+description: 'Deploy an application to Kind and make a simple HTTP test to test the deployment.'
 inputs:
   image-name:
     description: 'Full image name (repo/image_name:tag)'

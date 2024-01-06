@@ -1,0 +1,25 @@
+name: Test Action
+
+on: [push]
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+  tester:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Action with Sample Nginx Application
+        uses: ./
+        with:
+          image-name: "nginx:latest"
+          app-port: "80"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          timeout: "20s"
