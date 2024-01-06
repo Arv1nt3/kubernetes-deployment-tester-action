@@ -6,7 +6,7 @@ This GitHub Action deploys an application to a Kubernetes-in-Docker (Kind) clust
 
 ## Features
 
-- **Kind Cluster Setup**: Automatically sets up a Kind cluster using .
+- **Kind Cluster Setup**: Automatically sets up a Kind cluster using. Uses [@helm/kind-action](https://github.com/helm/kind-action) to create the Kind cluster.
 - **Application Deployment**: Deploys your application to the Kind cluster using a Kubernetes deployment configuration.
 - **Testing**: Performs a basic test by making an HTTP request to the deployed application.
 

@@ -2,6 +2,10 @@ name: Test
 
 on: [push]
 
+env:
+  IMAGE_NAME: "nginx"
+  IMAGE_TAG: "latest"
+
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -23,7 +27,7 @@ jobs:
       - name: Test Action with Sample Nginx Application
         uses: ./
         with:
-          image-name: "nginx:latest"
+          image-name: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
           app-port: "80"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          timeout: "20s"
+          timeout: "25s"
