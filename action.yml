@@ -8,7 +8,7 @@ inputs:
     description: 'Application port'
     required: true
   github-token:
-    description: 'Github token, you can use the default token: ${{ secrets.GITHUB_TOKEN }}'
+    description: 'Github token, you can use the default token: secrets.GITHUB_TOKEN'
     required: true
 
 runs:
