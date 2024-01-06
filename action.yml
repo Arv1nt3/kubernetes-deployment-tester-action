@@ -91,6 +91,10 @@ runs:
               - name: ghcr-secret
         " > deployment.yaml
       shell: bash
+    
+    - run: |
+        cat deployment.yaml
+      shell: bash
 
     - name: Setup Kind
       uses: helm/kind-action@v1.2.0
