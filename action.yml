@@ -15,9 +15,43 @@ runs:
   using: "composite"
   steps:
     - run: |
-        cp deployment-template.yaml deployment.yaml
-        sed -i 's|IMAGE_PLACEHOLDER|${{ inputs.image-name }}|g' deployment.yaml
-        sed -i 's|CONTAINER_PORT|${{ inputs.app-port }}|g' deployment.yaml
+        echo "
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: application
+          labels:
+            app: application
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: application
+          template:
+            metadata:
+              labels:
+                app: application
+            spec:
+              containers:
+              - name: application
+                image: ${{ inputs.image-name }}
+                ports:
+                - containerPort: ${{ inputs.app-port }}
+                readinessProbe:
+                  httpGet:
+                    path: /
+                    port: ${{ inputs.app-port }}
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                livenessProbe:
+                  httpGet:
+                    path: /
+                    port: ${{ inputs.app-port }}
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+              imagePullSecrets:
+              - name: ghcr-secret
+        " > deployment.yaml
       shell: bash
 
     - run: |
