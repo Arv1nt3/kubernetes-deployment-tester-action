@@ -20,7 +20,7 @@ Create a workflow YAML file in your `.github/workflows` directory. An [example w
 | Input         | Description                                         | Required | Default |
 |---------------|-----------------------------------------------------|----------|---------|
 | `image-name`  | Full image name (repository/image_name:tag).              | Yes      | N/A     |
-| `app-port`    | Application port.                                   | Yes      | N/A     |
+| `port`    | Application port.                                   | Yes      | N/A     |
 | `github-token`| GitHub token, you can use the default token: `secrets.GITHUB_TOKEN`. | Yes | N/A |
 | `timeout`     | Time to wait until testing the pod.                 | No       | `20s`   |
 
@@ -43,7 +43,7 @@ jobs:
       uses: Arv1nt3/kubernetes-deployment-tester-action@v1.1.1
       with:
         image-name: 'repository/your-username/your-application:tag'
-        app-port: '80'
+        port: '80'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         timeout: '30s' # optional, 20s by default
 ```

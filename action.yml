@@ -8,7 +8,7 @@ inputs:
   image-name:
     description: "Full image name (repo/image_name:tag)"
     required: true
-  app-port:
+  port:
     description: "Application port"
     required: true
   github-token:
@@ -70,17 +70,17 @@ runs:
               - name: application
                 image: ${{ inputs.image-name }}
                 ports:
-                - containerPort: ${{ inputs.app-port }}
+                - containerPort: ${{ inputs.port }}
                 readinessProbe:
                   httpGet:
                     path: /
-                    port: ${{ inputs.app-port }}
+                    port: ${{ inputs.port }}
                   initialDelaySeconds: 5
                   periodSeconds: 10
                 livenessProbe:
                   httpGet:
                     path: /
-                    port: ${{ inputs.app-port }}
+                    port: ${{ inputs.port }}
                   initialDelaySeconds: 15
                   periodSeconds: 20
               imagePullSecrets:
@@ -111,7 +111,7 @@ runs:
         sleep ${{ inputs.timeout }}
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
-        kubectl port-forward $POD_NAME 8000:${{ inputs.app-port }} &>/dev/null &
+        kubectl port-forward $POD_NAME 8000:${{ inputs.port }} &>/dev/null &
         sleep 5
       shell: bash
 

@@ -25,9 +25,9 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Test Action with Sample Nginx Application
-        uses: ./
+        uses: Arv1nt3/kubernetes-deployment-tester-action@main
         with:
           image-name: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
-          app-port: "80"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          port: "80"
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
           timeout: "25s"
