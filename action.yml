@@ -8,6 +8,9 @@ inputs:
   image_name:
     description: "The full name of the image (registry/image_name:tag)"
     required: true
+  cluster-config:
+    description: "The path to the kind config file"
+    required: false
   registry_url:
     description: "The URL of the registry"
     required: true
@@ -75,6 +78,14 @@ runs:
       shell: bash
 
     - run: |
+        command_line=""
+        args_line=""
+        if [ -n "${{ inputs.command }}" ]; then
+          command_line="command: [${{ inputs.command }}]"
+        fi
+        if [ -n "${{ inputs.args }}" ]; then
+          args_line="args: ${inputs.args}"
+        fi
         echo "
         apiVersion: apps/v1
         kind: Deployment
@@ -97,8 +108,8 @@ runs:
                 image: ${{ inputs.image_name }}
                 ports:
                 - containerPort: ${{ inputs.port }}
-                $(if [ -n \"${{ inputs.command }}\" ]; then echo \"command: [${{ inputs.command }}]\"; fi)
-                $(if [ -n \"${{ inputs.args }}\" ]; then echo \"args: [${{ inputs.args }}]\"; fi)
+                $command_line
+                $args_line
                 readinessProbe:
                   httpGet:
                     path: ${{ inputs.path }}
@@ -122,6 +133,8 @@ runs:
 
     - name: Setup Kind
       uses: helm/kind-action@v1.2.0
+      with:
+        config: ${{ inputs.cluster-config }}
 
     - run: |
         kubectl cluster-info
