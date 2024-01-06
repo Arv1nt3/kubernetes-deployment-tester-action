@@ -7,6 +7,9 @@ inputs:
   app-port:
     description: 'Application port'
     required: true
+  github-token:
+    description: 'Github token, you can use the default token: ${{ secrets.GITHUB_TOKEN }}'
+    required: true
 
 runs:
   using: "composite"
@@ -33,7 +36,7 @@ runs:
         kubectl create secret docker-registry ghcr-secret \
           --docker-server=ghcr.io \
           --docker-username=${{ github.actor }} \
-          --docker-password=${{ secrets.GITHUB_TOKEN }}
+          --docker-password=${{ inputs.github-token }}
       shell: bash
 
     - run: |
