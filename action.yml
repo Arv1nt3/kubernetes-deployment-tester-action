@@ -8,8 +8,7 @@ inputs:
     description: 'Application port'
     required: true
   github-token:
-    description: 'GitHub token, by default token: secrets.GITHUB_TOKEN'
-    default: ${{ secrets.GITHUB_TOKEN }}
+    description: 'GitHub token, you can use the default token: secrets.GITHUB_TOKEN'
     required: true
   timeout:
     description: 'Time to out until testing the pod'
