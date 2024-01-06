@@ -15,8 +15,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        sed -i 's/IMAGE_PLACEHOLDER/${{ inputs.image-name }}/g' deployment-template.yaml
-        sed -i 's/CONTAINER_PORT/${{ inputs.app-port }}/g' deployment-template.yaml
+        sed -i 's|IMAGE_PLACEHOLDER|${{ inputs.image-name }}|g' deployment-template.yaml
+        sed -i 's|CONTAINER_PORT|${{ inputs.app-port }}|g' deployment-template.yaml
       shell: bash
 
     - run: |
