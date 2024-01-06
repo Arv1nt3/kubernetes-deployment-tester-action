@@ -6,7 +6,7 @@ rules:
   indentation:
     spaces: 2
     indent-sequences: consistent
-  trailing-spaces: true
+  trailing-spaces: enable
   key-duplicates: enable
   document-start: disable
   document-end: disable
