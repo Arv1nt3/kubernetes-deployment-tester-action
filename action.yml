@@ -26,6 +26,10 @@ inputs:
     description: "The path to test, also used for readiness and liveness probes"
     required: false
     default: "/"
+  timeoutSeconds:
+    description: "Number of seconds to wait for the pod to spin up."
+    required: false
+    default: "20"
   initialDelaySeconds:
     description: "Number of seconds after the container has started before liveness or readiness probes are initiated."
     required: false
@@ -128,7 +132,7 @@ runs:
         kubectl apply -f crb.yaml
         kubectl apply -f deployment.yaml
         echo "Sleeping for ${{ inputs.initialDelaySeconds }}s to allow the pod to fully start."
-        sleep ${{ inputs.initialDelaySeconds }}
+        sleep ${{ inputs.timeoutSeconds }}
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
         kubectl port-forward $POD_NAME 8000:${{ inputs.port }} &>/dev/null &
