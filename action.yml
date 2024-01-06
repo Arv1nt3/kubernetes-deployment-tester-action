@@ -91,7 +91,7 @@ runs:
         fi
         env_vars_line=""
         if [ -n "${{ inputs.env_vars }}" ]; then
-          env_vars_line="env:$'\n'${{ inputs.env_vars }}"
+          env_vars_line=$(echo "${{ inputs.env_vars }}" | awk '{print "
         fi
         echo "
         apiVersion: apps/v1
