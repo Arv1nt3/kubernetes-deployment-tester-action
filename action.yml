@@ -18,6 +18,12 @@ inputs:
   registry_token:
     description: "Token or password used to connect to the specified container registry, for ghcr.io you can use the default token: secrets.GITHUB_TOKEN"
     required: true
+  command:
+    description: "The command to at container startup."
+    required: false
+  args:
+    description: "The arguments to the command."
+    required: false
   port:
     description: "The port of the application"
     required: false
@@ -91,6 +97,8 @@ runs:
                 image: ${{ inputs.image_name }}
                 ports:
                 - containerPort: ${{ inputs.port }}
+                $(if [ -n \"${{ inputs.command }}\" ]; then echo \"command: [${{ inputs.command }}]\"; fi)
+                $(if [ -n \"${{ inputs.args }}\" ]; then echo \"args: [${{ inputs.args }}]\"; fi)
                 readinessProbe:
                   httpGet:
                     path: ${{ inputs.path }}
