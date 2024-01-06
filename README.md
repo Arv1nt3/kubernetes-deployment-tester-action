@@ -3,7 +3,7 @@
 [![Test](https://github.com/Arv1nt3/kubernetes-deployment-tester-action/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/Arv1nt3/kubernetes-deployment-tester-action/actions/workflows/test.yml)
 
 >[!CAUTION]
->Currently this action only works with GitHub Container Registry (`https://ghcr.io`)!
+>**Currently this action only works with GitHub Container Registry (`https://ghcr.io`)!**
 
 This GitHub Action deploys an application to a Kubernetes-in-Docker (Kind) cluster and makes a simple HTTP request to check if the application is up and running correctly. It's designed to simplify the process of setting up a Kind cluster, deploying a Kubernetes application, and executing a basic test to ensure the application is running as expected.
 
