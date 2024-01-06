@@ -45,6 +45,7 @@ jobs:
         image-name: 'repository/your-username/your-application:tag'
         app-port: '80'
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        timeout: '30s' # optional, 20s by default
 ```
 
 ## Contributing
