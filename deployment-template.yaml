@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application
+  labels:
+    app: application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+      - name: application
+        image: IMAGE_PLACEHOLDER
+        ports:
+        - containerPort: CONTAINER_PORT
+        readinessProbe:
+          httpGet:
+            path: / # Update this if your app has a specific path for readiness
+            port: CONTAINER_PORT
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: / # Update this if your app has a specific path for liveness
+            port: CONTAINER_PORT
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      imagePullSecrets:
+      - name: ghcr-secret

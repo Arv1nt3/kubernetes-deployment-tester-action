@@ -1,0 +1,50 @@
+name: 'Deploy and Test on Kind'
+description: 'Deploy an application to Kind and run tests'
+inputs:
+  image-name:
+    description: 'Full image name (repo/image_name:tag)'
+    required: true
+  app-port:
+    description: 'Application port'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        sed -i 's/IMAGE_PLACEHOLDER/${{ inputs.image-name }}/g' deployment-template.yaml
+        sed -i 's/CONTAINER_PORT/${{ inputs.app-port }}/g' deployment-template.yaml
+      shell: bash
+
+    - run: |
+        helm install kind-action helm/kind-action@v1.2.0
+      shell: bash
+
+    - run: |
+        kubectl cluster-info
+        kubectl get nodes
+      shell: bash
+
+    - run: |
+        sed -i 's/IMAGE_TAG_PLACEHOLDER/${{ inputs.image-name }}/g' ${{ inputs.deployment-path }}
+      shell: bash
+
+    - run: |
+        kubectl create secret docker-registry ghcr-secret \
+          --docker-server=ghcr.io \
+          --docker-username=${{ github.actor }} \
+          --docker-password=${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+
+    - run: |
+        kubectl apply -f ${{ inputs.deployment-path }}
+        sleep 20
+        kubectl get po
+        POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
+        kubectl port-forward $POD_NAME 8000:${{ inputs.app-port }} &>/dev/null &
+        sleep 5
+      shell: bash
+
+    - run: |
+        curl -i http://localhost:8000/
+      shell: bash
