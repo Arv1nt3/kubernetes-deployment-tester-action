@@ -59,7 +59,7 @@ jobs:
         initialDelaySeconds: '5' # optional, defaults to 5
         periodSeconds: '10' # optional, defaults to 10
 ```
-This workflow will deploy your image from [ghcr.io](https://ghcr.io) to a Kind cluster and test it by making an HTTP request to the application's root path. If the request is successful, the workflow will complete successfully. If the request fails, the workflow will fail.
+This example workflow will deploy your image from [ghcr.io](https://ghcr.io) to a Kind cluster and test it by making an HTTP request to the application's root path. If the request is successful, the workflow will complete successfully. If the request fails, the workflow will fail.
 
 ## Contributing
 
