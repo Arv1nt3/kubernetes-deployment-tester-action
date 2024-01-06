@@ -135,6 +135,8 @@ runs:
         sleep ${{ inputs.timeoutSeconds }}
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
+        echo "Retrieving logs for $POD_NAME"
+        kubectl logs $POD_NAME
         kubectl port-forward $POD_NAME 8000:${{ inputs.port }} &>/dev/null &
         sleep 5
       shell: bash
