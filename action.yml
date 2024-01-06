@@ -5,23 +5,35 @@ branding:
   icon: "box"
   color: "green"
 inputs:
-  image-name:
-    description: "Full image name (repo/image_name:tag)"
+  image_name:
+    description: "The full name of the image (registry/image_name:tag)"
+    required: true
+  registry_url:
+    description: "The URL of the registry"
+    required: true
+    default: "ghcr.io"
+  registry_username:
+    description: "The username for the registry"
+    required: true
+  registry_token:
+    description: "Token or password used to connect to the specified container registry, for ghcr.io you can use the default token: secrets.GITHUB_TOKEN"
     required: true
   port:
     description: "The port of the application"
-    required: true
-  github-token:
-    description: "GitHub token, you can use the default token: secrets.GITHUB_TOKEN"
-    required: true
-  timeout:
-    description: "Time to out until testing the pod"
     required: false
-    default: "20s"
+    default: "80"
   path:
-    description: "Path for the livenessProbe and readinessProbe and for the HTTP test"
+    description: "The path to test, also used for readiness and liveness probes"
     required: false
     default: "/"
+  initialDelaySeconds:
+    description: "Number of seconds after the container has started before liveness or readiness probes are initiated."
+    required: false
+    default: "5"
+  periodSeconds:
+    description: "How often (in seconds) to perform the probe. Minimum value is 1."
+    required: false
+    default: "10"
 
 runs:
   using: "composite"
@@ -72,28 +84,24 @@ runs:
             spec:
               containers:
               - name: application
-                image: ${{ inputs.image-name }}
+                image: ${{ inputs.image_name }}
                 ports:
                 - containerPort: ${{ inputs.port }}
                 readinessProbe:
                   httpGet:
                     path: ${{ inputs.path }}
                     port: ${{ inputs.port }}
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
+                  initialDelaySeconds: ${{ inputs.initialDelaySeconds }}
+                  periodSeconds: ${{ inputs.periodSeconds }}
                 livenessProbe:
                   httpGet:
                     path: ${{ inputs.path }}
                     port: ${{ inputs.port }}
-                  initialDelaySeconds: 15
-                  periodSeconds: 20
+                  initialDelaySeconds: ${{ inputs.initialDelaySeconds }}
+                  periodSeconds: ${{ inputs.periodSeconds }}
               imagePullSecrets:
-              - name: ghcr-secret
+              - name: registry-secret
         " > deployment.yaml
-      shell: bash
-    
-    - run: |
-        cat deployment.yaml
       shell: bash
 
     - name: Setup Kind
@@ -105,18 +113,18 @@ runs:
       shell: bash
 
     - run: |
-        kubectl create secret docker-registry ghcr-secret \
-          --docker-server=ghcr.io \
-          --docker-username=${{ github.actor }} \
-          --docker-password=${{ inputs.github-token }}
+        kubectl create secret docker-registry registry-secret \
+          --docker-server=${{ inputs.registry_url }} \
+          --docker-username=${{ inputs.registry_username }} \
+          --docker-password=${{ inputs.registry_token }}
       shell: bash
 
     - run: |
         kubectl apply -f sa.yaml
         kubectl apply -f crb.yaml
         kubectl apply -f deployment.yaml
-        echo "Sleeping for ${{ inputs.timeout }} to allow the pod to fully start."
-        sleep ${{ inputs.timeout }}
+        echo "Sleeping for ${{ inputs.initialDelaySeconds }}s to allow the pod to fully start."
+        sleep ${{ inputs.initialDelaySeconds }}
         kubectl get po
         POD_NAME=$(kubectl get pod -l app=application -o jsonpath="{.items[0].metadata.name}")
         kubectl port-forward $POD_NAME 8000:${{ inputs.port }} &>/dev/null &

@@ -5,6 +5,13 @@ on: [push]
 env:
   IMAGE_NAME: "nginx"
   IMAGE_TAG: "latest"
+  REGISTRY_URL: "ghcr.io"
+  REGISTRY_USERNAME: "${{ github.actor }}"
+  REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  APP_PORT: "80"
+  PATH: "/"
+  INITIAL_DELAY_SECONDS: "5"
+  PERIOD_SECONDS: "10"
 
 jobs:
   linter:
@@ -17,6 +24,7 @@ jobs:
         uses: ibiqlik/action-yamllint@v3.1.1
         with:
           config_file: .yamllint.yml
+
   tester:
     needs: linter
     runs-on: ubuntu-latest
@@ -27,7 +35,11 @@ jobs:
       - name: Test Action with Sample Nginx Application
         uses: Arv1nt3/kubernetes-deployment-tester-action@main
         with:
-          image-name: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
-          port: "80"
-          github-token: '${{ secrets.GITHUB_TOKEN }}'
-          timeout: "25s"
+          image_name: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+          registry_url: ${{ env.REGISTRY_URL }}
+          registry_username: ${{ env.REGISTRY_USERNAME }}
+          registry_token: ${{ env.REGISTRY_TOKEN }}
+          port: ${{ env.APP_PORT }}
+          path: ${{ env.PATH }}
+          initialDelaySeconds: ${{ env.INITIAL_DELAY_SECONDS }}
+          periodSeconds: ${{ env.PERIOD_SECONDS }}

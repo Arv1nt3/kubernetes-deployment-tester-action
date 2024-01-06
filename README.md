@@ -5,30 +5,34 @@
 >[!CAUTION]
 >**This Action is still in development!**
 
-This GitHub Action deploys an application to a Kubernetes-in-Docker (Kind) cluster and makes a simple HTTP request to check if the application is up and running correctly. It's designed to simplify the process of setting up a Kind cluster, deploying a Kubernetes application, and executing a basic test to ensure the application is running as expected.
+This GitHub Action deploys an application to a Kubernetes-in-Docker (Kind) cluster and performs a simple HTTP test to verify the deployment. It simplifies the process of setting up a Kind cluster, deploying a Kubernetes application, and conducting basic tests to ensure the application's functionality.
 
 ## Features
 
-- **Kind Cluster Setup**: Automatically sets up a Kind cluster using. Uses [@helm/kind-action](https://github.com/helm/kind-action) to create the Kind cluster.
+- **Kind Cluster Setup**: Automatically sets up a Kind cluster using [@helm/kind-action](https://github.com/helm/kind-action).
 - **Application Deployment**: Deploys your application to the Kind cluster using a Kubernetes deployment configuration.
-- **Testing**: Performs a basic test by making an HTTP request to the deployed application.
+- **Testing**: Executes a basic test by making an HTTP request to the deployed application.
 
 ## Usage
 
 ### Pre-requisites
-Create a workflow YAML file in your `.github/workflows` directory. An [example workflow](#example-workflow) is available below. For more information, reference the GitHub Help Documentation for [Creating a workflow file](https://docs.github.com/en/actions/using-workflows#creating-a-workflow-file).
+Create a workflow YAML file in your `.github/workflows` directory. An [example workflow](#example-workflow) is available below. For more information, see the GitHub Help Documentation for [Creating a workflow file](https://docs.github.com/en/actions/using-workflows#creating-a-workflow-file).
 
 ### Inputs
 
-| Input         | Description                                         | Required | Default |
-|---------------|-----------------------------------------------------|----------|---------|
-| `image-name`  | Full image name (repository/image_name:tag).              | Yes      | N/A     |
-| `port`    | The port of the application.                                   | Yes      | N/A     |
-| `github-token`| GitHub token, you can use the default token: `secrets.GITHUB_TOKEN`. | Yes | N/A |
-| `timeout`     | Time to wait until testing the pod.                 | No       | `20s`   |
-| `path`     | Path for the livenessProbe and readinessProbe and for the HTTP test.                 | No       | `/`   |
+| Input              | Description                                                                                          | Required | Default  |
+|--------------------|------------------------------------------------------------------------------------------------------|----------|----------|
+| `image_name`       | The full name of the image (registry/image_name:tag).                                                | Yes      | N/A      |
+| `registry_url`     | The URL of the registry.                                                                             | Yes      | `ghcr.io`|
+| `registry_username`| The username for the registry.                                                                       | Yes      | N/A      |
+| `registry_token`   | Token or password used to connect to the specified container registry.                               | Yes      | N/A      |
+| `port`             | The port of the application.                                                                         | No       | `80`     |
+| `path`             | The path to test, also used for readiness and liveness probes.                                       | No       | `/`      |
+| `initialDelaySeconds` | Number of seconds after the container has started before liveness or readiness probes are initiated. | No | `5`   |
+| `periodSeconds`    | How often (in seconds) to perform the probe. Minimum value is 1.                                     | No       | `10`     |
 
 ### Example Workflow
+
 ```yaml
 name: Example Workflow
 
@@ -44,13 +48,18 @@ jobs:
     # ... steps to build and push your Docker image ...
 
     - name: Deploy and Test on Kind Cluster
-      uses: Arv1nt3/kubernetes-deployment-tester-action@v1.1.1
+      uses: Arv1nt3/kubernetes-deployment-tester-action@latest
       with:
-        image-name: 'repository/your-username/your-application:tag'
-        port: '80'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        timeout: '30s' # optional, 20s by default
+        image_name: 'repository/your-username/your-application:tag'
+        registry_url: 'ghcr.io'
+        registry_username: ${{ github.actor }}
+        registry_token: ${{ secrets.GITHUB_TOKEN }}
+        port: '80' # optional, defaults to 80
+        path: '/' # optional, defaults to /
+        initialDelaySeconds: '5' # optional, defaults to 5
+        periodSeconds: '10' # optional, defaults to 10
 ```
+This workflow will deploy your image from [ghcr.io](https://ghcr.io) to a Kind cluster and test it by making an HTTP request to the application's root path. If the request is successful, the workflow will complete successfully. If the request fails, the workflow will fail.
 
 ## Contributing
 
