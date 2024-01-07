@@ -94,7 +94,7 @@ runs:
           env_vars_line="env:"
           IFS=$'\n'
           for var in ${{ inputs.env_vars }}; do
-            env_vars_line="$env_vars_line\n              $var"
+            env_vars_line="$env_vars_line\n              - $var"
           done
         fi
         echo "
