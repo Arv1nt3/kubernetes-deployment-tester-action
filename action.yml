@@ -83,15 +83,19 @@ runs:
     - run: |
         command_line=""
         args_line=""
+        env_vars_line=""
         if [ -n "${{ inputs.command }}" ]; then
           command_line="command: [${{ inputs.command }}]"
         fi
         if [ -n "${{ inputs.args }}" ]; then
           args_line="args: [$(echo ${{ inputs.args }} | sed 's/,/ , /g')]"
         fi
-        env_vars_line=""
         if [ -n "${{ inputs.env_vars }}" ]; then
-          env_vars_line=$(echo "${{ inputs.env_vars }}" | sed 's/^/              /')
+          env_vars_line="env:"
+          IFS=$'\n'
+          for var in ${{ inputs.env_vars }}; do
+            env_vars_line="$env_vars_line\n              $var"
+          done
         fi
         echo "
         apiVersion: apps/v1
