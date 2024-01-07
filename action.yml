@@ -27,9 +27,6 @@ inputs:
   args:
     description: "The arguments to the command."
     required: false
-  env_vars:
-    description: "Environment variables in YAML format"
-    required: false
   port:
     description: "The port of the application"
     required: false
@@ -90,13 +87,6 @@ runs:
         if [ -n "${{ inputs.args }}" ]; then
           args_line="args: [$(echo ${{ inputs.args }} | sed 's/,/ , /g')]"
         fi
-        if [ -n "${{ inputs.env_vars }}" ]; then
-          env_vars_line="env:"
-          IFS=$'\n'
-          for var in ${{ inputs.env_vars }}; do
-            env_vars_line="$env_vars_line\n              - $var"
-          done
-        fi
         echo "
         apiVersion: apps/v1
         kind: Deployment
@@ -121,7 +111,6 @@ runs:
                 - containerPort: ${{ inputs.port }}
                 $command_line
                 $args_line
-                $env_vars_line
                 readinessProbe:
                   httpGet:
                     path: ${{ inputs.path }}
