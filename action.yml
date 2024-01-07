@@ -93,8 +93,8 @@ runs:
         if [ -n "${{ inputs.env_vars }}" ]; then
           env_vars_line="env:"
           IFS=$'\n'
-          for var in ${{ inputs.env_vars }}; do
-            env_vars_line="$env_vars_line\n              - $var"
+          for var in $(echo "${{ inputs.env_vars }}" | sed 's/,/\n/g'); do
+            env_vars_line="$env_vars_line\n              $var"
           done
         fi
         echo "
