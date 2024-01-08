@@ -51,83 +51,21 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
-        echo "
-        apiVersion: v1
-        kind: ServiceAccount
-        metadata:
-          name: test
-        " > sa.yaml
+    - run: pip install pyyaml
       shell: bash
 
-    - run: |
-        echo "
-        apiVersion: rbac.authorization.k8s.io/v1
-        kind: ClusterRoleBinding
-        metadata:
-          name: test
-        subjects:
-        - kind: ServiceAccount
-          name: test
-          namespace: default
-        roleRef:
-          kind: ClusterRole
-          name: cluster-admin
-          apiGroup: rbac.authorization.k8s.io
-        " > crb.yaml
+    - run: python deployment_script.py
       shell: bash
+      env:
+        INPUT_IMAGE_NAME: ${{ inputs.image-name }}
+        INPUT_PORT: ${{ inputs.port }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_INITIALDELAYSECONDS: ${{ inputs.initialDelaySeconds }}
+        INPUT_PERIODSECONDS: ${{ inputs.periodSeconds }}
+        INPUT_COMMAND: ${{ inputs.command }}
+        INPUT_ARGS: ${{ inputs.args }}
+        INPUT_ENV_VARS: ${{ inputs.env_vars }}
 
-    - run: |
-        command_line=""
-        args_line=""
-        env_vars_line=""
-        if [ -n "${{ inputs.command }}" ]; then
-          command_line="command: [${{ inputs.command }}]"
-        fi
-        if [ -n "${{ inputs.args }}" ]; then
-          args_line="args: [$(echo ${{ inputs.args }} | sed 's/,/ , /g')]"
-        fi
-        echo "
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: application
-          labels:
-            app: application
-        spec:
-          replicas: 1
-          selector:
-            matchLabels:
-              app: application
-          template:
-            metadata:
-              labels:
-                app: application
-            spec:
-              containers:
-              - name: application
-                image: ${{ inputs.image_name }}
-                ports:
-                - containerPort: ${{ inputs.port }}
-                $command_line
-                $args_line
-                readinessProbe:
-                  httpGet:
-                    path: ${{ inputs.path }}
-                    port: ${{ inputs.port }}
-                  initialDelaySeconds: ${{ inputs.initialDelaySeconds }}
-                  periodSeconds: ${{ inputs.periodSeconds }}
-                livenessProbe:
-                  httpGet:
-                    path: ${{ inputs.path }}
-                    port: ${{ inputs.port }}
-                  initialDelaySeconds: ${{ inputs.initialDelaySeconds }}
-                  periodSeconds: ${{ inputs.periodSeconds }}
-              imagePullSecrets:
-              - name: registry-secret
-        " > deployment.yaml
-      shell: bash
-    
     - run: |
         cat deployment.yaml
       shell: bash
