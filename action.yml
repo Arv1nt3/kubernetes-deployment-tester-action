@@ -57,8 +57,9 @@ runs:
     - run: pip install pyyaml
       shell: bash
 
-    - run: python3 create_deployment.py
+    - run: python3 ${{ github.action_path }}/create_deployment.py
       shell: bash
+      working-directory: ${{ github.action_path }}
       env:
         INPUT_IMAGE_NAME: ${{ inputs.image-name }}
         INPUT_PORT: ${{ inputs.port }}
