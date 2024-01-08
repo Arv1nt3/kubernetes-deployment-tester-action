@@ -27,6 +27,9 @@ inputs:
   args:
     description: "The arguments to the command."
     required: false
+  env_vars:
+    description: "Environment variables in YAML format"
+    required: false
   port:
     description: "The port of the application"
     required: false
@@ -54,7 +57,7 @@ runs:
     - run: pip install pyyaml
       shell: bash
 
-    - run: python deployment_script.py
+    - run: python3 create_deployment.py
       shell: bash
       env:
         INPUT_IMAGE_NAME: ${{ inputs.image-name }}
