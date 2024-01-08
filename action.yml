@@ -74,7 +74,7 @@ runs:
         INPUT_ENV_VARS: ${{ inputs.env_vars }}
 
     - run: |
-        cat deployment.yaml
+        cat ${{ github.action_path }}/deployment.yaml
       shell: bash
 
     - name: Setup Kind
@@ -95,9 +95,9 @@ runs:
       shell: bash
 
     - run: |
-        kubectl apply -f sa.yaml
-        kubectl apply -f crb.yaml
-        kubectl apply -f deployment.yaml
+        kubectl apply -f ${{ github.action_path }}/sa.yaml
+        kubectl apply -f ${{ github.action_path }}/crb.yaml
+        kubectl apply -f ${{ github.action_path }}/deployment.yaml
         echo "Sleeping for ${{ inputs.timeoutSeconds }}s to allow the pod to fully start."
         sleep ${{ inputs.timeoutSeconds }}
         kubectl get po
