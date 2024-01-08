@@ -57,6 +57,9 @@ runs:
     - run: pip install pyyaml
       shell: bash
 
+    - run: cat ${{ github.action_path }}/create_deployment.py
+      shell: bash
+
     - run: python3 ${{ github.action_path }}/create_deployment.py
       shell: bash
       working-directory: ${{ github.action_path }}
