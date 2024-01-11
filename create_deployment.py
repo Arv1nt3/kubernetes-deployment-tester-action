@@ -38,7 +38,7 @@ def create_deployment_yaml(image_name, command, args, env_vars, port, path, init
                     "containers": [{
                         "name": "application",
                         "image": image_name,
-                        "imagePullPolicy": "IfNotPresent"
+                        "imagePullPolicy": "IfNotPresent",
                         "ports": [{"containerPort": port}],
                         "command": [command] if command else None,
                         "args": args.split(',') if args else [],
