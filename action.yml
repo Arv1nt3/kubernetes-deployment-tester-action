@@ -89,7 +89,7 @@ runs:
     - name: Load local Docker image
       if: inputs.use_local_image == 'true'
       run: |
-        kind load docker-image ${{ inputs.image_name }}
+        kind load docker-image ${{ inputs.image_name }} --name chart-testing
       shell: bash
 
     - run: |
