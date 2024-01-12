@@ -17,14 +17,14 @@ inputs:
     required: false
   registry_url:
     description: "The URL of the registry"
-    required: true
+    required: false
     default: "ghcr.io"
   registry_username:
     description: "The username for the registry"
-    required: true
+    required: false
   registry_token:
     description: "Token or password used to connect to the specified container registry, for ghcr.io you can use the default token: secrets.GITHUB_TOKEN"
-    required: true
+    required: false
   command:
     description: "The command to at container startup."
     required: false
