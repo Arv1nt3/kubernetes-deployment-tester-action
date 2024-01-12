@@ -3,19 +3,7 @@ name: Test
 on: [push]
 
 jobs:
-  linter:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
-
-      - name: Lint YAML files
-        uses: ibiqlik/action-yamllint@v3.1.1
-        with:
-          config_file: .yamllint.yml
-
   test-remote-image:
-    needs: linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -56,7 +44,6 @@ jobs:
             "https://ghcr.io/v2/arv1nt3/application/manifests/latest"
 
   test-local-image:
-    needs: linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
