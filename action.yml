@@ -12,7 +12,7 @@ inputs:
     description: "Set to true to use a local Docker image with 'kind load docker-image', false to pull from registry"
     required: true
     default: "false"    
-  cluster-config:
+  cluster_config:
     description: "The path to the kind config file"
     required: false
   registry_url:
@@ -84,8 +84,8 @@ runs:
     - name: Setup Kind
       uses: helm/kind-action@v1.2.0
       with:
-        config: ${{ inputs.cluster-config }}
- 
+        config: ${{ inputs.cluster_config }}
+
     - name: Load local Docker image
       if: inputs.use_local_image == 'true'
       run: |
