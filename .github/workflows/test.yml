@@ -42,7 +42,7 @@ jobs:
         if: success()
         run: |
           echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker rmi ghcr.io/arv1nt3/application:latest
+          docker rmi arv1nt3/application:latest
           curl -X DELETE -u ${{ github.actor }}:${{ secrets.CR_PAT }} \
             "https://ghcr.io/v2/arv1nt3/application/manifests/latest"
 
