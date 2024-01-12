@@ -20,7 +20,7 @@ Create a workflow YAML file in your `.github/workflows` directory. [Example work
 | Input              | Description                                                                                          | Required | Default  |
 |--------------------|------------------------------------------------------------------------------------------------------|----------|----------|
 | `image_name`       | The full name of the image (format it accordingly to registry specifications).                                                | Yes      | N/A      |
-| `use_local_image`       | Set to true to use a local Docker image with 'kind load docker-image', false to pull from registry.                                                | Yes      | `false`      |
+| `use_local_image`       | Set to true to use a local Docker image with `kind load docker-image`, false to pull from registry.                                                | Yes      | `false`      |
 | `cluster_config`       | Path to the Kind config file.                                                | No      | N/A      |
 | `registry_url`     | The URL of the registry.                                                                             | No      | `ghcr.io`|
 | `registry_username`| The username for the registry.                                                                       | No      | N/A      |
