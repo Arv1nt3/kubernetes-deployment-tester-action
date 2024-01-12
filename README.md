@@ -77,7 +77,6 @@ jobs:
       with:
         image_name: '<repo_url>/<image_name>:<tag>' # required
         use_local_image: true # required
-        cluster-config: './path/to/your/kind/config' # optional
         registry_url: 'ghcr.io' # optional
         registry_username: ${{ github.actor }} # optional
         registry_token: ${{ secrets.GITHUB_TOKEN }}  # optional
@@ -119,7 +118,6 @@ jobs:
       with:
         image_name: '<repo_url>/<image_name>:<tag>' # required
         use_local_image: false # required
-        cluster-config: './path/to/your/kind/config' # optional
         registry_url: 'ghcr.io' # optional
         registry_username: ${{ github.actor }} # optional
         registry_token: ${{ secrets.GITHUB_TOKEN }}  # optional
