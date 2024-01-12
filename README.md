@@ -16,23 +16,35 @@ This GitHub Action deploys an application using a Docker image to a Kubernetes-i
 Create a workflow YAML file in your `.github/workflows` directory. [Example workflows](#example-workflow) are available below. For more information, see the GitHub Help Documentation for [Creating a workflow file](https://docs.github.com/en/actions/using-workflows#creating-a-workflow-file).
 
 ### Inputs
-
+#### Kubernetes Action Inputs
 | Input              | Description                                                                                          | Required | Default  |
 |--------------------|------------------------------------------------------------------------------------------------------|----------|----------|
-| `image_name`       | The full name of the image (format it accordingly to registry specifications).                                                | Yes      | N/A      |
-| `use_local_image`       | Set to true to use a local Docker image with `kind load docker-image`, false to pull from registry.                                                | Yes      | `false`      |
-| `cluster_config`       | Path to the Kind config file.                                                | No      | N/A      |
-| `registry_url`     | The URL of the registry.                                                                             | No      | `ghcr.io`|
-| `registry_username`| The username for the registry.                                                                       | No      | N/A      |
-| `registry_token`   | Token or password used to connect to the specified container registry.                               | No      | N/A      |
-| `command`   | Command to run at container startup. Check [example workflows](#example-workflows) to see the exact format expected.                               | No      | N/A      |
-| `args`   | Arguments for the command. Check [example workflows](#example-workflows) to see the exact format expected.                               | No      | N/A      |
-| `env_vars`   | Environment variables in YAML format. Check [example workflows](#example-workflows) to see the exact format expected.                               | No      | N/A      |
+| `image_name`       | The full name of the image (format it accordingly to registry specifications).                       | Yes      | N/A      |
+| `use_local_image`  | Set to true to use a local Docker image with `kind load docker-image`, false to pull from registry.  | Yes      | `false`  |
+| `cluster_config`   | Path to the Kind config file.                                                                        | No       | N/A      |
+| `registry_url`     | The URL of the registry.                                                                             | No       | `ghcr.io`|
+| `registry_username`| The username for the registry.                                                                       | No       | N/A      |
+| `registry_token`   | Token or password used to connect to the specified container registry.                               | No       | N/A      |
+| `command`          | Command to run at container startup. Check [example workflows](#example-workflows) for format.       | No       | N/A      |
+| `args`             | Arguments for the command. Check [example workflows](#example-workflows) for format.                 | No       | N/A      |
+| `env_vars`         | Environment variables in YAML format. Check [example workflows](#example-workflows) for format.      | No       | N/A      |
 | `port`             | The port of the application.                                                                         | No       | `80`     |
 | `path`             | The path to test, also used for readiness and liveness probes.                                       | No       | `/`      |
-| `timeoutSeconds` | Number of seconds to wait for the pod to start. | No | `20`   |
-| `initialDelaySeconds` | Number of seconds after the container has started before liveness or readiness probes are initiated. | No | `5`   |
-| `periodSeconds`    | How often (in seconds) to perform the probe. Minimum value is 1.                                     | No       | `10`     |
+| `timeoutSeconds`   | Number of seconds to wait for the pod to start.                                                      | No       | `20`     |
+| `initialDelaySeconds` | Number of seconds after container start before probes are initiated.       | No       | `5`      |
+| `periodSeconds`    | Frequency (in seconds) of the probe. Minimum value is 1.                                             | No       | `10`     |
+#### Kind Action Inputs
+| Input              | Description                                                                                          | Required | Default  |
+|--------------------|------------------------------------------------------------------------------------------------------|----------|----------|
+| `version`          | The Kind version to use.                                                                             | No       | `v0.20.0`|
+| `config`           | Path to the Kind config file.                                                                        | No       | N/A      |
+| `node_image`       | The Docker image for the cluster nodes.                                                              | No       | N/A      |
+| `cluster_name`     | Name of the cluster to create.                                                                       | No       | `chart-testing` |
+| `wait`             | Duration to wait for the control plane to become ready.                                              | No       | `60s`    |
+| `verbosity`        | Verbosity level for Kind.                                                                            | No       | `0`      |
+| `kubectl_version`  | The kubectl version to use.                                                                          | No       | `v1.26.4`|
+| `install_only`     | Skips cluster creation, only installs Kind.                                                          | No       | N/A      |
+| `ignore_failed_clean` | Whether to ignore post-delete cluster failures.                                        | No       | `false`  |
 
 ### Example Workflows
 

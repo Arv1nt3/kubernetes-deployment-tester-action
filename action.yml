@@ -54,6 +54,39 @@ inputs:
     description: "How often (in seconds) to perform the probe. Minimum value is 1."
     required: false
     default: "5"
+  version:
+    description: "The kind version to use (default: v0.19.0)"
+    required: false
+    default: "v0.20.0"
+  config:
+    description: "The path to the kind config file"
+    required: false
+  node_image:
+    description: "The Docker image for the cluster nodes"
+    required: false
+  cluster_name:
+    description: "The name of the cluster to create (default: chart-testing)"
+    required: false
+    default: "chart-testing"
+  wait:
+    description: "The duration to wait for the control plane to become ready (default: 60s)"
+    required: false
+    default: "60s"
+  verbosity:
+    description: "The verbosity level for kind (default: 0)"
+    default: "0"
+    required: false
+  kubectl_version:
+    description: "The kubectl version to use (default: v1.26.4)"
+    required: false
+    default: "v1.26.4"
+  install_only:
+    description: "Skips cluster creation, only install kind (default: false)"
+    required: false
+  ignore_failed_clean:
+    description: "Whether to ignore the post-delete the cluster (default: false)"
+    default: false
+    required: false
 
 runs:
   using: "composite"
@@ -84,7 +117,16 @@ runs:
     - name: Setup Kind
       uses: helm/kind-action@v1.2.0
       with:
-        config: ${{ inputs.cluster_config }}
+        version: ${{ inputs.version }}
+        config: ${{ inputs.config }}
+        node_image: ${{ inputs.node_image }}
+        cluster_name: ${{ inputs.cluster_name }}
+        wait: ${{ inputs.wait }}
+        verbosity: ${{ inputs.verbosity }}
+        kubectl_version: ${{ inputs.kubectl_version }}
+        install_only: ${{ inputs.install_only }}
+        ignore_failed_clean: ${{ inputs.ignore_failed_clean }}
+
 
     - name: Load local Docker image
       if: inputs.use_local_image == 'true'
