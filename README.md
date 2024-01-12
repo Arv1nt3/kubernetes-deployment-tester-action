@@ -33,7 +33,7 @@ Create a workflow YAML file in your `.github/workflows` directory. [Example work
 | `timeoutSeconds`   | Number of seconds to wait for the pod to start.                                                      | No       | `20`     |
 | `initialDelaySeconds` | Number of seconds after container start before probes are initiated.       | No       | `5`      |
 | `periodSeconds`    | Frequency (in seconds) of the probe. Minimum value is 1.                                             | No       | `10`     |
-#### Kind Action Inputs
+#### Kind Action Inputs - check [Kind Action Inputs](https://github.com/helm/kind-action?tab=readme-ov-file#inputs)
 | Input              | Description                                                                                          | Required | Default  |
 |--------------------|------------------------------------------------------------------------------------------------------|----------|----------|
 | `version`          | The Kind version to use.                                                                             | No       | `v0.20.0`|
