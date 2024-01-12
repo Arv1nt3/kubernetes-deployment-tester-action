@@ -13,7 +13,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.0.0
 
       - name: Login to GitHub Container Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       
       - name: Build image and push to registry
         run: |
@@ -29,7 +29,7 @@ jobs:
           image_name: 'ghcr.io/arv1nt3/application:latest'
           use_local_image: false
           port: '5000'
-          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          registry_token: ${{ secrets.CR_PAT }}
           registry_url: ghcr.io
           registry_username: arv1nt3
           command: 'flask'
@@ -41,9 +41,9 @@ jobs:
       - name: Remove Image from ghcr.io
         if: success()
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           docker rmi ghcr.io/arv1nt3/application:latest
-          curl -X DELETE -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+          curl -X DELETE -u ${{ github.actor }}:${{ secrets.CR_PAT }} \
             "https://ghcr.io/v2/arv1nt3/application/manifests/latest"
 
   test-local-image:
@@ -69,7 +69,7 @@ jobs:
           image_name: 'ghcr.io/arv1nt3/application:latest'
           use_local_image: true
           port: '5000'
-          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          registry_token: ${{ secrets.CR_PAT }}
           registry_url: ghcr.io
           registry_username: arv1nt3
           command: 'flask'
