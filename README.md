@@ -56,14 +56,14 @@ jobs:
       run: |
         docker buildx build \
           --file ./Dockerfile \
-          --tag <repo_url>/<username>/<image_name>:<tag> \
+          --tag <repo_url>/<image_name>:<tag> \
           --load \
           .
 
     - name: Deploy and Test on Kind Cluster
       uses: Arv1nt3/kubernetes-deployment-tester-action@latest
       with:
-        image_name: '<repo_url>/<username>/<image_name>:<tag>' # required
+        image_name: '<repo_url>/<image_name>:<tag>' # required
         use_local_image: true # required
         cluster-config: './path/to/your/kind/config' # optional
         registry_url: 'ghcr.io' # optional
@@ -98,14 +98,14 @@ jobs:
       run: |
         docker buildx build \
           --file ./Dockerfile \
-          --tag <repo_url>/<username>/<image_name>:<tag> \
+          --tag <repo_url>/<image_name>:<tag> \
           --push \
           .
 
     - name: Deploy and Test on Kind Cluster
       uses: Arv1nt3/kubernetes-deployment-tester-action@latest
       with:
-        image_name: '<repo_url>/<username>/<image_name>:<tag>' # required
+        image_name: '<repo_url>/<image_name>:<tag>' # required
         use_local_image: false # required
         cluster-config: './path/to/your/kind/config' # optional
         registry_url: 'ghcr.io' # optional
