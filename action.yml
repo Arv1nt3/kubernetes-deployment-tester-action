@@ -53,7 +53,7 @@ inputs:
   periodSeconds:
     description: "How often (in seconds) to perform the probe. Minimum value is 1."
     required: false
-    default: "10"
+    default: "5"
 
 runs:
   using: "composite"

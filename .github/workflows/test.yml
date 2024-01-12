@@ -2,43 +2,88 @@ name: Test
 
 on: [push]
 
-env:
-  IMAGE_NAME: "nginx"
-  IMAGE_TAG: "latest"
-  REGISTRY_URL: "ghcr.io"
-  REGISTRY_USERNAME: "${{ github.actor }}"
-  REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-  APP_PORT: "80"
-  PATH: "/"
-  INITIAL_DELAY_SECONDS: "5"
-  PERIOD_SECONDS: "10"
-
 jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
 
       - name: Lint YAML files
         uses: ibiqlik/action-yamllint@v3.1.1
         with:
           config_file: .yamllint.yml
-  tester:
+
+  test-remote-image:
     needs: linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.0.0
+
+      - name: Build image and push to registry
+        run: |
+          docker buildx build \
+            --file ./test/Dockerfile \
+            --tag ghcr.io/arv1nt3/application:latest \
+            --push \
+            ./test
 
       - name: Test Action with Sample Nginx Application
         uses: Arv1nt3/kubernetes-deployment-tester-action@main
         with:
-          image_name: '${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
-          registry_url: ${{ env.REGISTRY_URL }}
-          registry_username: ${{ env.REGISTRY_USERNAME }}
-          registry_token: ${{ env.REGISTRY_TOKEN }}
-          port: ${{ env.APP_PORT }}
-          path: ${{ env.PATH }}
-          initialDelaySeconds: ${{ env.INITIAL_DELAY_SECONDS }}
-          periodSeconds: ${{ env.PERIOD_SECONDS }}
+          image_name: 'ghcr.io/arv1nt3/application:latest'
+          use_local_image: false
+          port: '5000'
+          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          registry_url: ghcr.io
+          registry_username: arv1nt3
+          command: 'flask'
+          args: 'run,--host=0.0.0.0'
+          env_vars: |
+            - name: APP_KEY
+              value: "YourAppKeyHere"
+
+      - name: Remove Image from ghcr.io
+        if: success()
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker rmi ghcr.io/arv1nt3/application:latest
+          curl -X DELETE -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            "https://ghcr.io/v2/arv1nt3/application/manifests/latest"
+
+  test-local-image:
+    needs: linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.0.0
+
+      - name: Build image and load locally
+        run: |
+          docker buildx build \
+            --file ./test/Dockerfile \
+            --tag ghcr.io/arv1nt3/application:latest \
+            --load \
+            ./test
+
+      - name: Test Action with Sample Nginx Application
+        uses: Arv1nt3/kubernetes-deployment-tester-action@main
+        with:
+          image_name: 'ghcr.io/arv1nt3/application:latest'
+          use_local_image: true
+          port: '5000'
+          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          registry_url: ghcr.io
+          registry_username: arv1nt3
+          command: 'flask'
+          args: 'run,--host=0.0.0.0'
+          env_vars: |
+            - name: APP_KEY
+              value: "YourAppKeyHere"
